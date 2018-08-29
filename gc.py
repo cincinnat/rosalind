@@ -5,19 +5,28 @@ import argparse
 import signal
 import functools
 
+import tools
 
-def fib(n, k, acc=0):
-    if n <= 2:
-        return 1
-    return fib(n-1, k) + k * fib(n-2, k)
+
+def gc_content(dna):
+    def count_gc(acc, ch):
+        return acc + (ch in 'GC')
+    return functools.reduce(count_gc, dna, 0) / len(dna)
 
 
 def main(args):
-    n, k = sys.stdin.read().split()
-    n = int(n)
-    k = int(k)
+    records = tools.io.read_fasta(sys.stdin)
 
-    print(fib(n, k))
+    def get_gc_content(rec):
+        label, values = rec
+        return label, gc_content(''.join(values))
+    records = map(get_gc_content, records)
+
+    label, value = max(records, key=lambda rec: rec[1])
+
+    print(label)
+    print(value * 100)
+    
 
 
 if __name__ == '__main__':
