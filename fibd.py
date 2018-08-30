@@ -22,20 +22,42 @@ import functools
 #
 
 
-def fibd(n, m):
-    f = [0] * n
-    c = [0] * n
+# UPD: and of courcse my solution is overcomplicated
+# http://rosalind.info/problems/fibd/solutions/
+# 
+# Solution 1: count ages
+#
+#    def fib(n,k=1):
+#        ages = [1] + [0]*(k-1)
+#        for i in xrange(n-1):
+#            ages = [sum(ages[1:])] + ages[:-1]
+#        return sum(ages)
+#
+#
+# Solution 2: recursion
+#
+#    for i in xrange(2,n):
+#        f[i]=f[i-1]+f[i-2]
+#        if i>=k:
+#            f[i]-=f[(i-k)-1]
+#    print f[i]
+#
+# Solution 3:
+#
+#    F(n) = usual Fibonacci for n in 1..m
+#    F(n) = sum F(n-i) for i in 2..m, n in m+1..N
 
-    f[0] = 1
-    c[0] = 1
+
+def fibd(n, m):
+    f = [1] * n
+    c = [1] * n
 
     for i in range(1, n):
         c[i] = f[i-1] - c[i-1]
 
-        if i < m:
-            f[i] = f[i-1] + c[i]
-        else:
-            f[i] = f[i-1] + c[i] - c[i-m]
+        f[i] = f[i-1] + c[i]
+        if i >= m:
+            f[i] -= c[i-m]
 
     return f[-1]
 
