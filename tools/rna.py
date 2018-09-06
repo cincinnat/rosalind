@@ -1,4 +1,4 @@
-from . import _codon_table
+from . import helpers
 
 
 _raw = '''
@@ -22,4 +22,4 @@ UGG W      CGG R      AGG R      GGG G
 
 
 def codon_table():
-    return _codon_table.parse(_raw)
+    return helpers.parse(_raw)
