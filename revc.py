@@ -5,21 +5,13 @@ import argparse
 import signal
 import functools
 
+import tools
+
 
 def main(args):
     s = sys.stdin.read().strip()
 
-    complements = {
-        'A': 'T',
-        'T': 'A',
-        'C': 'G',
-        'G': 'C',
-    }
-    s = list(map(lambda ch: complements[ch], s))
-    s = reversed(s)
-    s = ''.join(s)
-
-    print(s)
+    print(tools.reverse_complement(s))
 
 
 if __name__ == '__main__':

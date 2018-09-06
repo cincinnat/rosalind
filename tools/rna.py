@@ -1,5 +1,7 @@
+from . import _codon_table
 
-_codon_table = '''
+
+_raw = '''
 UUU F      CUU L      AUU I      GUU V
 UUC F      CUC L      AUC I      GUC V
 UUA L      CUA L      AUA I      GUA V
@@ -20,7 +22,4 @@ UGG W      CGG R      AGG R      GGG G
 
 
 def codon_table():
-    table = _codon_table.split()
-    codons = table[::2]
-    amino_acids = table[1::2]
-    return dict(zip(codons, amino_acids))
+    return _codon_table.parse(_raw)
