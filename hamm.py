@@ -6,16 +6,14 @@ import signal
 import functools
 import collections
 
-
-def hamming_distance(s1, s2):
-    return sum((a != b for a, b in zip(s1, s2)))
+import tools
 
 
 def main(args):
     s1 = sys.stdin.readline().strip()
     s2 = sys.stdin.readline().strip()
 
-    print(hamming_distance(s1, s2))
+    print(tools.helpers.hamming_distance(s1, s2))
 
 
 if __name__ == '__main__':

@@ -18,3 +18,7 @@ def parse(table, dtype=str):
     keys = table[::2]
     values = map(dtype, table[1::2])
     return dict(zip(keys, values))
+
+
+def hamming_distance(s1, s2):
+    return sum((a != b for a, b in zip(s1, s2)))
