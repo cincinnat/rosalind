@@ -7,22 +7,19 @@ import signal
 import tools
 
 
-def inc(value, base):
-    value[-1] += 1
-    for i in range(len(value)-1, 0, -1):
-        value[i-1] += value[i] // base
-        value[i] = value[i] % base
-
-
 def main(args):
-    inputs = map(str.strip, sys.stdin.readlines())
-    alphabet = next(inputs).split()
-    sz = int(next(inputs))
+    inputs = tools.io.read_fasta(sys.stdin)
+    dna = ''.join(next(inputs)[1])
 
-    alphabet = sorted(alphabet)
+    alphabet = 'ACGT'
+    n = 4
 
-    for string in tools.helpers.gen_kmers(alphabet, sz):
-        print(string)
+    composition = { kmer: 0 for kmer in tools.helpers.gen_kmers(alphabet, n) }
+    for i in range(len(dna)-n+1):
+        composition[dna[i:i+n]] += 1
+
+    composition = [v for _, v in sorted(composition.items())]
+    print(*composition)
 
 
 if __name__ == '__main__':
