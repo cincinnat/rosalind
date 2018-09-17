@@ -19,8 +19,6 @@ def main(args):
     alphabet = next(inputs).split()
     sz = int(next(inputs))
 
-    alphabet = sorted(alphabet)
-
     for string in tools.helpers.gen_kmers(alphabet, sz):
         print(string)
 
