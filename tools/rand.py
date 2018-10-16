@@ -1,34 +1,20 @@
 import math
 
 
-def match_logprob(gc_content, s):
+def match_logprob(gc_content, s, base=10):
     ''' Probability of a random string to be equal to s.
 
     Returns the log-probability that a random string constructed with
     given gc_content is equal to s.
     '''
 
-    def symbol_logprob(gc_content):
-        if gc_content != 0:
-            prob_g = math.log(gc_content/2, 10)
-        else:
-            prob_g = float('-inf')
+    def log(x, base=base):
+        return math.log(x, base) if x != 0 else float('-inf')
 
-        if gc_content != 1:
-            prob_a = math.log((1 - gc_content)/2, 10)
-        else:
-            prob_a = float('-inf')
-
-        return dict(
-            A = prob_a,
-            T = prob_a,
-            G = prob_g,
-            C = prob_g,
-        )
-
-    prob = symbol_logprob(gc_content)
-    return sum((prob[ch] for ch in s))
+    l = len(s)
+    n_gc = len([ch for ch in s if ch in 'GC'])
+    return - l * log(2) + n_gc * log(gc_content) + (l-n_gc) * log(1-gc_content)
 
 
 def match_prob(gc_content, s):
-    return math.pow(10., match_logprob(gc_content, s))
+    return math.pow(10., match_logprob(gc_content, s, base=10))
