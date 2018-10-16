@@ -9,8 +9,16 @@ def match_logprob(gc_content, s):
     '''
 
     def symbol_logprob(gc_content):
-        prob_g = math.log(gc_content/2, 10)
-        prob_a = math.log((1 - gc_content)/2, 10)
+        if gc_content != 0:
+            prob_g = math.log(gc_content/2, 10)
+        else:
+            prob_g = float('-inf')
+
+        if gc_content != 1:
+            prob_a = math.log((1 - gc_content)/2, 10)
+        else:
+            prob_a = float('-inf')
+
         return dict(
             A = prob_a,
             T = prob_a,
