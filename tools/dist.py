@@ -11,7 +11,15 @@ def edit_matrix(s1, s2, indel_weight=1, substitution_weight=1):
 
     def weight(u, v):
         if u[0] != v[0] and u[1] != v[1]:
-            return (s1[u[0]] != s2[u[1]]) * substitution_weight
+            # The short version
+            #     (s1[..] != s2[..]) * substitution_weight
+            # will not work if `substitution_weight` is an infinity
+            # because `inf * 0` gives nan.
+            #
+            if s1[u[0]] != s2[u[1]]:
+                return substitution_weight
+
+            return 0
         return indel_weight
 
     dist = dict()
