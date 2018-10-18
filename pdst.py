@@ -13,7 +13,7 @@ def main(args):
     strings = [''.join(seq) for _, seq in inputs]
 
     def foo(i, j):
-        dist = tools.helpers.hamming_distance(strings[i], strings[j])
+        dist = tools.dist.hamming_distance(strings[i], strings[j])
         return dist / len(strings[i])
 
     dist = np.fromfunction(np.vectorize(foo), (len(strings), len(strings)), dtype=int)

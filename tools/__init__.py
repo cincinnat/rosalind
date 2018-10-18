@@ -3,3 +3,4 @@ from . import rna
 from . import dna
 from . import helpers
 from . import rand
+from . import dist

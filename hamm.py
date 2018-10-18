@@ -13,7 +13,7 @@ def main(args):
     s1 = sys.stdin.readline().strip()
     s2 = sys.stdin.readline().strip()
 
-    print(tools.helpers.hamming_distance(s1, s2))
+    print(tools.dist.hamming_distance(s1, s2))
 
 
 if __name__ == '__main__':

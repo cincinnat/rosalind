@@ -11,7 +11,7 @@ import tools
 
 def correct_error(read, correct_reads):
     for s in correct_reads:
-        if tools.helpers.hamming_distance(s, read) == 1:
+        if tools.dist.hamming_distance(s, read) == 1:
             return s
     assert False
 

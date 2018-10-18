@@ -20,10 +20,6 @@ def parse(table, dtype=str):
     return dict(zip(keys, values))
 
 
-def hamming_distance(s1, s2):
-    return sum((a != b for a, b in zip(s1, s2)))
-
-
 def inc_indices(indices, base):
     indices[-1] += 1
     for i in range(len(indices)-1, 0, -1):
