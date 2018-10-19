@@ -89,33 +89,48 @@ def _flip(seq, i, j):
 
 def _reversal_distance(seq, breaks):
     if len(breaks) == 0:
-        return 0
+        return 0, []
     if len(breaks) == 2:
-        return 1
-    if len(breaks) == 3:
-        return 2
+        return 1, [tuple(breaks)]
 
     # there is always > 1 break
     assert len(breaks) != 1, (seq, breaks)
 
     dist = float('inf')
+    reversals = None
 
     for off, i in enumerate(breaks):
         for j in breaks[off+1:]:
             new_seq = _flip(seq, i, j)
             new_breaks = _find_breaks(new_seq)
             if len(new_breaks) < len(breaks):
-                # plus one flip
-                d = 1 + _reversal_distance(new_seq, new_breaks)
-                dist = min(d, dist)
-    return dist
+                d, r = _reversal_distance(new_seq, new_breaks)
+                d += 1  # plus one flip
+                if d < dist:
+                    dist = d
+                    reversals = [(i, j)] + r
+
+    return dist, reversals
+
+
+def _reversal_distance_init(a, b):
+    # map `b` into sequence [0 .. len(b)-1]
+    code_table = dict(zip(b, range(len(b))))
+    a = list(map(code_table.get, a))
+
+    breaks = _find_breaks(a)
+
+    return (a, breaks)
 
 
 def reversal_distance(a, b):
-    # map `a` into sequence [0 .. len(a)-1]
-    code_table = dict(zip(a, range(len(a))))
-    b = list(map(code_table.get, b))
+    dist, _ = _reversal_distance(*_reversal_distance_init(a, b))
+    return dist
 
-    breaks = _find_breaks(b)
 
-    return _reversal_distance(b, breaks)
+def reversals_path(a, b):
+    '''Return a collection of reversals sorting a into b.
+    '''
+
+    _, reversals = _reversal_distance(*_reversal_distance_init(a, b))
+    return reversals
