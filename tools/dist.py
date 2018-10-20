@@ -100,8 +100,8 @@ def _reversal_distance(seq, breaks):
 
     dist = float('inf')
 
-    for i in breaks:
-        for j in breaks[i+1:]:
+    for off, i in enumerate(breaks):
+        for j in breaks[off+1:]:
             new_seq = _flip(seq, i, j)
             new_breaks = _find_breaks(new_seq)
             if len(new_breaks) < len(breaks):
