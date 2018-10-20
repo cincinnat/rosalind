@@ -6,7 +6,7 @@ import collections
 class Node:
     def __init__(self):
         self.label = None
-        self.neighbours = []
+        self.neighbours = set()
 
     def as_dict(self, parent=None):
         return dict(
@@ -31,8 +31,8 @@ def _convert(tree, parent=None):
 
 
     def link(u, v):
-        u.neighbours.append(v)
-        v.neighbours.append(u)
+        u.neighbours.add(v)
+        v.neighbours.add(u)
 
     node = Node()
     node.label = name(tree)
