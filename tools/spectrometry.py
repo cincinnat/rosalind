@@ -1,3 +1,6 @@
+import collections
+import itertools
+
 from . import helpers
 
 _mass_table = '''
@@ -26,3 +29,25 @@ Y   163.06333
 # Monoisotopic mass table
 #
 mass_table = helpers.parse(_mass_table, dtype=float)
+
+
+def minkowski_diff(s1, s2):
+    assert isinstance(s1, collections.Counter)
+    assert isinstance(s2, collections.Counter)
+
+    def diff(s1, s2):
+        for a, b in itertools.product(s1.elements(), s2.elements()):
+            yield a - b
+
+    return collections.Counter(diff(s1, s2))
+
+
+def minkowski_sum(s1, s2):
+    assert isinstance(s1, collections.Counter)
+    assert  isinstance(s2, collections.Counter)
+
+    def diff(s1, s2):
+        for a, b in itertools.product(s1.elements(), s2.elements()):
+            yield a + b
+
+    return collections.Counter(diff(s1, s2))
