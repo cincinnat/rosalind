@@ -71,3 +71,7 @@ def infer_protein(spectrum):
         protein.append(acid)
 
     return ''.join(protein)
+
+
+def mass(string):
+    return sum(map(mass_table.get, string))

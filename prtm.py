@@ -12,8 +12,7 @@ import tools
 def main(args):
     peptide = str.strip(sys.stdin.read())
 
-    mass_table = tools.spectrometry.mass_table
-    print(sum(map(mass_table.get, peptide)))
+    print(tools.spectrometry.mass(peptide))
 
 
 if __name__ == '__main__':
