@@ -1,5 +1,6 @@
 import collections
 import itertools
+import math
 
 from . import helpers
 
@@ -51,3 +52,22 @@ def minkowski_sum(s1, s2):
             yield a + b
 
     return collections.Counter(diff(s1, s2))
+
+
+def find_amino_acid(mass):
+    for a, m in mass_table.items():
+        if math.isclose(m, mass, rel_tol=1e-6):
+            return a
+    return None
+
+
+def infer_protein(spectrum):
+    protein = []
+    for x, y in zip(spectrum[:-1], spectrum[1:]):
+        mass = y - x
+        acid = find_amino_acid(mass)
+        if acid is None:
+            return None
+        protein.append(acid)
+
+    return ''.join(protein)
