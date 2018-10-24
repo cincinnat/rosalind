@@ -5,7 +5,7 @@ class Vertex:
     def __init__(self, parent, label):
         self.parent = parent
         self.in_label = label
-        self.chidren = []
+        self.children = []
         self.sids = set()
 
 
@@ -15,7 +15,7 @@ class Vertex:
             parent = id(self.parent),
             in_label = self.in_label,
             sids = list(self.sids),
-            chidren = [c.as_dict() for c in self.chidren],
+            children = [c.as_dict() for c in self.children],
         )
  
 
@@ -39,7 +39,7 @@ class SuffixTree:
         def add_child(parent, label):
             v = Vertex(parent, label)
             v.sids.add(string_id)
-            parent.chidren.append(v)
+            parent.children.append(v)
             return v
 
 
@@ -48,10 +48,10 @@ class SuffixTree:
             tail = child.in_label[prefix_len:]
 
             intermediate_vertex = Vertex(root, head)
-            root.chidren[i] = intermediate_vertex
+            root.children[i] = intermediate_vertex
 
             intermediate_vertex.sids = child.sids | { string_id }
-            intermediate_vertex.chidren.append(child)
+            intermediate_vertex.children.append(child)
             child.parent = intermediate_vertex
             child.in_label = tail
 
@@ -60,7 +60,7 @@ class SuffixTree:
 
         root.sids.add(string_id)
 
-        for i, c in enumerate(root.chidren):
+        for i, c in enumerate(root.children):
             if suffix[0] == c.in_label[0]:
                 prefix_len = get_prefix_len(c.in_label, suffix)
 
@@ -102,7 +102,7 @@ class SuffixTree:
         root = root or self.root
         yield root
 
-        for child in root.chidren:
+        for child in root.children:
             for v in self.traverse(child):
                 yield v
 
@@ -123,7 +123,7 @@ class SuffixTree:
     def find(self, substr, root=None):
         root = root or self.root
 
-        for child in root.chidren:
+        for child in root.children:
             label = child.in_label
 
             if label.endswith(self.end) and label.startswith(substr):
