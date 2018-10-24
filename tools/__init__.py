@@ -6,3 +6,4 @@ from . import rand
 from . import dist
 from . import spectrometry
 from . import newick
+from . import suffix_tree
