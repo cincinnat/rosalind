@@ -20,9 +20,10 @@ class Vertex:
  
 
 class SuffixTree:
-    def __init__(self):
+    def __init__(self, end='$'):
+        self.end = '$'
         self.strings = []
-        self.__root = Vertex(None, None)
+        self.root = Vertex(None, None)
 
 
     def __add_suffix(self, string_id, root, suffix):
@@ -84,21 +85,21 @@ class SuffixTree:
 
 
     def add(self, string):
-        string += '$'
+        string += self.end
         string_id = len(self.strings)
         self.strings.append(string)
 
         for i in range(len(string)):
             suffix = string[i:]
-            self.__add_suffix(string_id, self.__root, suffix)
+            self.__add_suffix(string_id, self.root, suffix)
 
 
     def __str__(self):
-        return json.dumps(self.__root.as_dict(), indent=4)
+        return json.dumps(self.root.as_dict(), indent=4)
 
 
     def traverse(self, root=None):
-        root = root or self.__root
+        root = root or self.root
         yield root
 
         for child in root.chidren:
@@ -110,10 +111,26 @@ class SuffixTree:
         path = []
         while vertex.parent is not None:
             label = vertex.in_label
-            if label.endswith('$'):
+            if label.endswith(self.end):
                 label = label[:-1]
 
             path.append(label)
             vertex = vertex.parent
 
         return ''.join(reversed(path))
+
+
+    def find(self, substr, root=None):
+        root = root or self.root
+
+        for child in root.chidren:
+            label = child.in_label
+
+            if label.endswith(self.end) and label.startswith(substr):
+                return child
+            elif substr == label:
+                return child
+            elif substr.startswith(label):
+                return self.find(substr[len(label):], child)
+
+        return None
