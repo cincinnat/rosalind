@@ -7,52 +7,67 @@ class Node:
     def __init__(self):
         self.label = None
         self.neighbours = set()
+        self.weights = dict()
 
     def as_dict(self, parent=None):
+        children = [node for node in self.neighbours if node is not parent]
         return dict(
+            self = id(self),
             label = self.label,
-            parent = parent.label if parent else None,
-            children = [c.as_dict(self) for c in self.neighbours if c is not parent]
+            parent = id(parent) if parent else None,
+            in_weight = parent.weights.get(self, None) if parent else None,
+            children = [c.as_dict(self) for c in children],
         )
 
     def __str__(self):
         return json.dumps(self.as_dict(), indent=4)
 
 
-def _convert(tree, parent=None):
-    def select(children, data):
-        return [ch for ch in children if ch.data in data]
+def _convert(term, parent=None):
+    if term.data in ['internal', 'leaf']:
+        node = Node()
+        if parent:
+            parent.neighbours.add(node)
+            node.neighbours.add(parent)
 
-    def name(tree):
-        name = select(tree.children, ['name'])
-        if len(name) == 1:
-            return name[0].children[0].value
-        return '<empty #%s>' % id(tree)
+        for ch in term.children:
+            _convert(ch, node)
+        return node
 
+    elif term.data == 'branch':
+        assert parent is not None
 
-    def link(u, v):
-        u.neighbours.add(v)
-        v.neighbours.add(u)
+        w = None
+        for ch in term.children:
+            if ch.data == 'weight':
+                w = float(ch.children[0].value)
+            else:
+                child = _convert(ch, parent)
 
-    node = Node()
-    node.label = name(tree)
+        if w is not None:
+            parent.weights[child] = w
+            child.weights[parent] = w
+            
 
-    if tree.data == 'internal':
-        for ch in select(tree.children, ['leaf', 'internal']):
-            link(node, _convert(ch, node))
+    elif term.data == 'name':
+        parent.label = term.children[0].value
 
-    return node
+    else:
+        assert False, 'unexpected term: %' % term.data
 
 
 def parse(string):
     grammar = '''
-        ?tree:      subtree ";"
-        ?subtree:   leaf | internal
+        ?tree:     subtree ";"
+        ?subtree:  leaf | internal
         leaf:      [name]
-        internal:  "(" [subtree ("," subtree)*] ")" [name]
+        internal:  "(" [branch ("," branch)*] ")" [name]
+        branch:    subtree [weight]
+        weight:    ":" SIGNED_NUMBER
         name:      CNAME
 
         %import common.CNAME
+        %import common.SIGNED_NUMBER
     '''
 
     parser = lark.Lark(grammar, start='tree')
